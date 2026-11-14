@@ -14,5 +14,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Check out the repository
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      # Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker buildx build --load -t events-api:latest .
+
+      # Start the Docker container
+      - name: Start Docker container
+        run: |
+          docker run -d \
+            --name events-api \
+            -p 5000:5000 \
+            events-api:latest
+
+      # Wait for the API to become available
+      - name: Wait for API to start
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://localhost:5000/api/health; then
+              echo "API is ready!"
+              exit 0
+            fi
+
+            echo "Waiting for API to start..."
+            sleep 2
+          done
+
+          echo "API failed to start!"
+          docker logs events-api
+          exit 1
+
+      # Check the API health endpoint
+      - name: Check API health
+        run: |
+          response=$(curl -fsS http://localhost:5000/api/health)
+
+          echo "Health check response: $response"
+
+          echo "$response" | grep -q '"status"[[:space:]]*:[[:space:]]*"healthy"'
+
+          echo "Health check successful!"
