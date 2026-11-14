@@ -1,0 +1,47 @@
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite-*
+
+# Git metadata
+.git/
+.gitignore
+
+# Tests and test cache
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# Python build artifacts
+build/
+dist/
+*.egg-info/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Documentation and course materials
+docs/
+notes/
+course_materials/
+
+# Operating system files
+.DS_Store
+Thumbs.db
